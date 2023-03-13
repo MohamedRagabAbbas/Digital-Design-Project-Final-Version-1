@@ -1,6 +1,0 @@
-﻿  DD Project.cpp
-D:\Semesters\Spring2023\Digital Design I\Digital-Design-Project-Final-Version-1\DD Project\DD Project\DD Project.cpp(67,14): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-D:\Semesters\Spring2023\Digital Design I\Digital-Design-Project-Final-Version-1\DD Project\DD Project\DD Project.cpp(273,28): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-D:\Semesters\Spring2023\Digital Design I\Digital-Design-Project-Final-Version-1\DD Project\DD Project\DD Project.cpp(286,14): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-D:\Semesters\Spring2023\Digital Design I\Digital-Design-Project-Final-Version-1\DD Project\DD Project\DD Project.cpp(383,51): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-  DD Project.vcxproj -> D:\Semesters\Spring2023\Digital Design I\Digital-Design-Project-Final-Version-1\DD Project\x64\Debug\DD Project.exe
