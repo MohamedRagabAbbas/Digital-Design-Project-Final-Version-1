@@ -11,6 +11,105 @@
 #include <sstream>
 using namespace std;
 // 
+void printSop(vector<string> exp)
+{
+    cout << "The Canonical Sum of Products is the follwing: " << endl;
+    for (int i = 0; i < exp.size() - 1; i++)
+    {
+        cout << "(" << exp[i] << ")" << " + ";
+    }
+    cout << "(" << exp[exp.size() - 1] << ")" << endl;
+}
+void printPos(vector<string> exp)
+{
+    cout << "The Canonical Product of Sums is the follwing: " << endl;
+    for (int i = 0; i < exp.size() - 1; i++)
+    {
+        cout << "(" << exp[i] << ")" << " * ";
+    }
+    cout << "(" << exp[exp.size() - 1] << ")" << endl;
+}
+void SoP(const vector<vector<bool>>& table, string vnames, vector<string>& sop)
+{
+    int nofvaribals = vnames.length();
+    int x = table.size();
+    int count = 0;
+    for (int i = 0; i < x; i++)
+    {
+        if (table[i][nofvaribals] == 1)
+        {
+            count++;
+        }
+    }
+    sop.resize(count);
+    int count2 = -1;
+    for (int i = 0; i < x; i++)
+    {
+        if (table[i][nofvaribals] == 1)
+        {
+            count2++;
+            sop[count2] = "";
+            for (int j = 0; j < nofvaribals; j++)
+            {
+                if (table[i][j] == 1)
+                {
+                    sop[count2] = sop[count2] + vnames[j];
+
+                }
+                else
+                {
+                    sop[count2] = sop[count2] + vnames[j] + "'";
+                }
+
+            }
+        }
+    }
+
+}
+void PoS(const vector<vector<bool>>& table, string vnames, vector<string>& sop)
+{
+    int nofvaribals = vnames.length();
+    int x = table.size();
+    int count = 0;
+    for (int i = 0; i < x; i++)
+    {
+        if (table[i][nofvaribals] == 0)
+        {
+            count++;
+        }
+    }
+    sop.resize(count);
+    int count2 = -1;
+    int counter = 0;
+    for (int i = 0; i < x; i++)
+    {
+        counter = 0;
+        if (table[i][nofvaribals] == 0)
+        {
+            count2++;
+            sop[count2] = "";
+            for (int j = 0; j < nofvaribals; j++)
+            {
+                if (table[i][j] == 0)
+                {
+                    sop[count2] = sop[count2] + vnames[j];
+                    counter++;
+                    if (counter < nofvaribals)
+                        sop[count2] = sop[count2] + '+';
+                }
+                else
+                {
+                    sop[count2] = sop[count2] + vnames[j] + "'";
+                    counter++;
+                    if (counter < nofvaribals)
+                        sop[count2] = sop[count2] + '+';
+                }
+
+            }
+        }
+    }
+
+}
 map<char, int> returnMap(string Term)
 {
     map<char, int> m;
