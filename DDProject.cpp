@@ -10,7 +10,7 @@
 #include <cmath>
 #include <sstream>
 using namespace std;
-
+// 
 map<char, int> returnMap(string Term)
 {
     map<char, int> m;
