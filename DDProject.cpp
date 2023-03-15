@@ -11,6 +11,12 @@
 #include <sstream>
 using namespace std;
 
+struct Implicant {
+    string term;
+    vector<int> minterms;
+    bool checked = false;
+};
+
 void printSop(vector<string> exp){
     cout << "The Canonical Sum of Products is the follwing: " << endl;
     for (int i = 0; i < exp.size() - 1; i++)
@@ -157,6 +163,47 @@ void Print(vector<vector<bool>> table, string Term){
             cout << table[i][j] << "    ";
         }
         cout << endl;
+    }
+}
+
+string fromImplicantToTerm(string implicant)
+{
+    string Term;
+    char letter = 'a';
+    for (int i = 0; i < implicant.size(); i++)
+    {
+        if (implicant[i] == '-')
+        {
+            letter++;
+            continue;
+        }
+        else if (implicant[i] == '1')
+        {
+            Term += letter++;
+        }
+        else
+        {
+            Term += letter++;
+            Term += '`';
+        }
+    }
+    return Term;
+}
+
+void PrintAllPrimeImplicants(vector<Implicant> implicants)
+{
+    cout << "\nAll Prime Implicants\n\n";
+    for (int j = 0; j < implicants.size(); j++)
+    {
+        cout << setw(6) << fromImplicantToTerm(implicants[j].term) << " : " << implicants[j].term << " : ";
+        cout << "(";
+        for (int i = 0; i < implicants[j].minterms.size(); i++)
+        {
+            cout << implicants[j].minterms[i];
+            if (i != implicants[j].minterms.size() - 1)
+                cout << ",";
+        }
+        cout << ")" << endl;
     }
 }
 
@@ -390,11 +437,6 @@ vector<vector<bool>> fillTableWithMinterms(vector<int> minterms){
     return table;
 }
 
-struct Implicant {
-    string term;
-    vector<int> minterms;
-    bool checked = false;
-};
 
 // convert decimal to binary
 string decToBin(int n) {
@@ -689,8 +731,61 @@ vector<string> epi(vector <Implicant>& prim, vector<int>& m)
     return EPI;
 }
 
+void printReducedPITable(vector<vector<string>> table, string s){
+    
+    for(int i = 0; i < (int)table[0].size()/2 * 6 - 1; i++) cout << " ";
+    cout << s << "\n";
+    for (int i = 0; i < table.size(); i++)
+    {
+        cout << "\t\t  ";
+        if(i == 1) {
+            for(int i = 0; i < (int)(table[0].size() - 2) * 7; i++) cout << "-";
+            cout << "---";
+        }
+        cout << "\n";
+        for (int k = 0; k < (int)table[0].size(); k++)
+        {
+            if(k == 1 && i != 0) cout << setw(4) << "|" << table[i][k] << "   ";
+            else  cout << setw(5) << table[i][k] << "  ";
+        }
+        cout << endl;
+    }
+    cout << endl;
+}
 
+vector<vector<string>> reduceTable(vector<string> EPI, vector<vector<string>> CC){
+    set<string> EPrimes;
+    for(int i = 0; i < EPI.size(); i++){
+        EPrimes.insert(EPI[i]);
+    }
+//    cout << "Essential Primes: \n";
+//    for(auto u : EPI) cout << u << "\n";
 
+    set<int> removeRow, removeCol;
+    for(int i = 0; i < CC.size(); i++){
+        if(EPrimes.count(CC[i][0])){
+            removeRow.insert(i);
+            for(int j = 1; j < CC[i].size(); j++){
+                if(CC[i][j] == "x") removeCol.insert(j);
+            }
+        }
+    }
+    
+    // remove rows covered by essential prime implicants
+    for(int i = (int)CC.size()-1; i >= 0; i--){
+        if(removeRow.count(i)) CC.erase(CC.begin() + i);
+    }
+    
+    // remove minterms covered by essential prime implicants
+    for(int i = (int)CC.size()-1; i >= 0; i--){
+        if(removeCol.count(i)) CC[i].erase(CC[i].begin() + i);
+    }
+    
+    string s1 = "\nReduced PI Table after removing Essential Prime Implicants";
+    printReducedPITable(CC, s1);
+    
+    return CC;
+}
 
 void Handlinginput(){
     bool test1 = 1;
@@ -825,7 +920,6 @@ void Handlinginput(){
 
 
 }
-
 
 
 
