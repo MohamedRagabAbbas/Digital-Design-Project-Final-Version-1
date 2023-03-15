@@ -205,6 +205,7 @@ string demorgan(string term) {
     }
     return demorgan_term;
 }
+
 string Replace(string term, map<char, int> indexOf, vector<bool> table){
     for (int i = 0; i < term.length(); i++)
     {
@@ -405,7 +406,6 @@ string decToBin(int n) {
     reverse(r.begin(), r.end());
     return r;
 }
-
 // make all binary values of equal length (add leading zeroee)
 vector<Implicant> padding(vector<Implicant>& minterms) {
  
@@ -562,6 +562,136 @@ vector<Implicant> getPrimeImplicants(vector<Implicant>& minterms) {
     return allPrimeImplicants;
 }
 
+vector<vector<string>> CoverageChart(vector <Implicant>& prim, vector<int>& m)
+{
+    vector<vector<string>> table;
+    vector<string> minterms;
+    vector<int> deletedM;
+    for (int i = 0; i < m.size(); i++)
+    {
+        minterms.push_back(to_string(m[i]));
+    }
+    vector<string> EPI;
+    table.resize(prim.size() + 1);
+    for (int i = 0; i < table.size(); i++)
+    {
+        table[i].resize(minterms.size() + 1);
+    }
+    table[0][0] = "  Z  ";
+    for (int i = 0; i < minterms.size(); i++)
+    {
+        table[0][i + 1] = minterms[i];
+    }
+
+    for (int i = 0; i < prim.size(); i++)
+    {
+        table[i + 1][0] = prim[i].term;
+        for (int k = 1; k < table[0].size(); k++)
+        {
+            if (findmin(prim[i], table[0][k]))
+                table[i + 1][k] = "x";
+            else table[i + 1][k] = "0";
+        }
+    }
+
+    return table;
+
+}
+void PrintCoverageChart(vector<vector<string>> table)
+{
+    cout << "                                        The Coverage Table                         " << endl << endl;
+    for (int i = 0; i < table.size(); i++)
+    {
+        cout << "   ";
+        for (int k = 0; k < table[0].size(); k++)
+        {
+            cout << setw(5) << table[i][k] << "  ";
+        }
+        cout << endl;
+    }
+    cout << endl;
+}
+vector<string> epi(vector <Implicant>& prim, vector<int>& m)
+{
+    vector<int> deletedM;
+    vector<string> EPI;
+    vector<vector<string>> table = CoverageChart(prim, m);
+    table.resize(prim.size() + 1);
+    int counter = 0;
+    int row;
+    string espi_test;
+    for (int i = 1; i < table[0].size(); i++)
+    {
+        counter = 0;
+        for (int j = 1; j < table.size(); j++)
+        {
+            if (table[j][i] == "x")
+            {
+                counter++;
+                row = j;
+                espi_test = table[j][0];
+            }
+        }
+        if (counter == 1)
+        {
+            EPI.push_back(espi_test);
+
+            for (int j = 1; j < table[0].size(); j++)
+            {
+                if (table[row][j] == "x")
+                {
+                    deletedM.push_back(m[j - 1]);
+                }
+            }
+        }
+    }
+
+    vector<int> newMinterms;
+    bool flag = false;
+    for (int i = 0; i < m.size(); i++)
+    {
+        flag = 0;
+        for (int j = 0; j < deletedM.size(); j++)
+        {
+            if (m[i] == deletedM[j])
+            {
+                flag = 1;
+                break;
+            }
+
+        }
+        if (!flag)
+        {
+            newMinterms.push_back(m[i]);
+        }
+    }
+    m = newMinterms;
+
+    bool flag2;
+    vector<Implicant> newImplicants;
+    for (int i = 0; i < prim.size(); i++)
+    {
+        flag2 = 0;
+        for (int j = 0; j < EPI.size(); j++)
+        {
+            if (prim[i].term == EPI[j])
+            {
+                flag2 = 1;
+                break;
+            }
+        }
+        if (!flag2)
+        {
+            newImplicants.push_back(prim[i]);
+        }
+    }
+    prim = newImplicants;
+    return EPI;
+}
+
+
+
+
 void Handlinginput(){
     bool test1 = 1;
     bool test2 = 1;
@@ -695,6 +825,9 @@ void Handlinginput(){
 
 
 }
+
+
+
 
 int main(){
     
