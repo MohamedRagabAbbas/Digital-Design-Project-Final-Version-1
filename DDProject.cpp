@@ -918,6 +918,7 @@ vector<vector<string>> reduceTable(vector<string> EPI, vector<vector<string>> CC
     return CC;
 }
 
+<<<<<<< HEAD
 void minimized_expression(vector<vector<string>> final_table, vector<string> EPI) {
 
     vector<string> answer;
@@ -942,6 +943,8 @@ void minimized_expression(vector<vector<string>> final_table, vector<string> EPI
 
 
 
+=======
+>>>>>>> ead7eba48e19318d6af066cabec55eda6c0ffbdd
 bool validateExpression(string input)
 {
 
@@ -970,8 +973,12 @@ string Modify(string input)
     return input;
 }
 
+<<<<<<< HEAD
 
 void Handlinginput() {
+=======
+void Handlinginput(){
+>>>>>>> ead7eba48e19318d6af066cabec55eda6c0ffbdd
     bool test1 = 1;
     bool test2 = 1;
     string Term;
@@ -1003,6 +1010,7 @@ void Handlinginput() {
         switch (input_type)
         {
         case 1:
+<<<<<<< HEAD
             int c;
             cout << "Please enter 1 if you need to enter the expression as SOPs or 2 if you want it without any constraints" << endl;
             cout << "Enter Your Choice : ";
@@ -1027,6 +1035,18 @@ void Handlinginput() {
                 ex = Modify(ex);
                 cout << ex << endl;
             }
+=======
+            cout << "Please enter your expression: ";
+            cin.ignore();
+            getline(cin, ex);
+            if (!validateExpression(ex))
+            {
+                cout << "This Expression Is Not Valid" << endl;
+                test2 = 0;
+            }
+            ex = Modify(ex);
+            cout << ex << endl;
+>>>>>>> ead7eba48e19318d6af066cabec55eda6c0ffbdd
             break;
         case 2:
             cout << "Please enter the number of minterms : ";
