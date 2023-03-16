@@ -787,6 +787,34 @@ vector<vector<string>> reduceTable(vector<string> EPI, vector<vector<string>> CC
     return CC;
 }
 
+bool validateExpression(string input)
+{
+
+    bool hasplus = 0;
+    for (int i = 0; i < input.length(); i++)
+    {
+        if (input[i] == '+')
+            hasplus = 1;
+        if (input[i] == '*')
+            return 0;
+    }
+
+    return hasplus;
+}
+
+string Modify(string input)
+{
+
+    for (int i = 0; i < input.size() - 1; i++)
+    {
+        if (((input[i] >= 'A' && input[i] <= 'Z') || (input[i] >= 'a' && input[i] <= 'z')) && ((input[i + 1] >= 'A' && input[i + 1] <= 'Z') || (input[i + 1] >= 'a' && input[i + 1] <= 'z')))
+        {
+            input.insert(input.begin() + i + 1, '*');
+        }
+    }
+    return input;
+}
+
 void Handlinginput(){
     bool test1 = 1;
     bool test2 = 1;
@@ -815,7 +843,15 @@ void Handlinginput(){
         {
         case 1:
             cout << "Please enter your expression: ";
-            cin >> ex;
+            cin.ignore();
+            getline(cin, ex);
+            if (!validateExpression(ex))
+            {
+                cout << "This Expression Is Not Valid" << endl;
+                test2 = 0;
+            }
+            ex = Modify(ex);
+            cout << ex << endl;
             break;
         case 2:
             cout << "Please enter the number of minterms : ";
