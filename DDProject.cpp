@@ -797,11 +797,13 @@ void PrintCoverageChart(vector<vector<string>> table) {
 vector<string> epi(vector <Implicant>& prim, vector<int>& m) {
     vector<int> deletedM;
     vector<string> EPI;
+    set<string> EPI1;
     vector<vector<string>> table = CoverageChart(prim, m);
     table.resize(prim.size() + 1);
     int counter = 0;
     int row;
     string espi_test;
+
     for (int i = 1; i < table[0].size(); i++)
     {
         counter = 0;
@@ -816,7 +818,8 @@ vector<string> epi(vector <Implicant>& prim, vector<int>& m) {
         }
         if (counter == 1)
         {
-            EPI.push_back(espi_test);
+
+            EPI1.insert(espi_test);
 
             for (int j = 1; j < table[0].size(); j++)
             {
@@ -826,6 +829,9 @@ vector<string> epi(vector <Implicant>& prim, vector<int>& m) {
                 }
             }
         }
+    }
+    for (const auto& element : EPI1) {
+        EPI.push_back(element);
     }
 
     vector<int> newMinterms;
@@ -1304,7 +1310,10 @@ void Handlinginput() {
                     AllEPI = epi(all, allminterms);
                     cout << "\nAll Essential Prime Implicants:\n\n";
                     for (int i = 0; i < AllEPI.size(); i++)
+                    {
+
                         cout << setw(6) << fromImplicantToTerm(AllEPI[i]) << " : " << AllEPI[i] << endl;
+                    }
                 }
                 else if (input_type == 2 || input_type == 3)
                 {
@@ -1317,6 +1326,7 @@ void Handlinginput() {
                     cout << "\nAll Essential Prime Implicants:\n\n";
                     for (int i = 0; i < AllEPI.size(); i++)
                     {
+
                         cout << setw(5) << fromImplicantToTerm(AllEPI[i]) << " : " << AllEPI[i] << endl;
                     }
                     cout << endl;
