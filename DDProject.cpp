@@ -1095,6 +1095,161 @@ string modify(string input) {
 }
 
 
+
+map<string, int>  Columns(vector<vector<string>>& matrix)
+{
+    map<string, int> m{};
+    for (int i = 1; i < matrix.size(); i++)
+    {
+        for (int j = 1; j < matrix[i].size(); j++)
+        {
+            if (matrix[i][j] == "x")
+            {
+                m[matrix[0][j]]++;
+            }
+        }
+    }
+    vector<pair<string, int>> v(m.begin(), m.end());
+    sort(v.begin(), v.end(), [](const auto& a, const auto& b) {
+        return a.second < b.second;
+        });
+    reverse(v.begin(), v.end());
+
+    return m;
+
+}
+
+map<string, int>  Rows(vector<vector<string>>& matrix, map<string, int> c)
+{
+    map<string, int> r{};
+    for (int i = 1; i < matrix.size(); i++)
+    {
+        for (int j = 1; j < matrix[i].size(); j++)
+        {
+            if (matrix[i][j] == "x")
+            {
+                r[matrix[i][0]] += c[matrix[0][j]];
+            }
+        }
+    }
+
+    return r;
+
+}
+
+void removeColumns(std::vector<std::vector<std::string>>& table, const std::vector<int>& columnsToRemove) {
+    // Sort the vector of columns to remove in descending order
+    std::vector<int> sortedColumnsToRemove = columnsToRemove;
+    std::sort(sortedColumnsToRemove.begin(), sortedColumnsToRemove.end(), std::greater<int>());
+
+    // Remove the specified columns from each row
+    for (auto& row : table) {
+        for (const auto& colIndex : sortedColumnsToRemove) {
+            row.erase(row.begin() + colIndex);
+        }
+    }
+}
+
+
+vector<string> remove_dominating_rows_and_columns(vector<vector<string>>& matrix) {
+    set<int> col;
+    set<int> row;
+
+    vector<string>sol;
+
+    while (matrix.size() > 1 && (matrix[0].size() > 1))
+    {
+        map<string, int> rows = Rows(matrix, Columns(matrix));
+        vector<pair<string, int>> v(rows.begin(), rows.end());
+        vector<int>col;
+        sort(v.begin(), v.end(), [](const auto& a, const auto& b)
+            {
+                return a.second < b.second;
+            });
+        reverse(v.begin(), v.end());
+        sol.push_back(v[0].first);
+        for (int i = 0; i < matrix.size(); i++)
+        {
+            if (matrix[i][0] == v[0].first)
+            {
+                for (int k = 0; k < matrix[i].size(); k++)
+                {
+                    if (matrix[i][k] == "x")
+                    {
+                        col.push_back(k);
+                    }
+                }
+                matrix.erase(matrix.begin() + i);
+                removeColumns(matrix, col);
+            }
+        }
+    }
+
+    return sol;
+
+    ///*0 2 3 5 7 9 11 13 14 16 18 24 26 28 30*/
+}
+
+void printReducedPITable(vector<vector<string>> table, string s) {
+
+    for (int i = 0; i < (int)table[0].size() / 2 * 6 - 1; i++) cout << " ";
+    cout << s << "\n";
+    for (int i = 0; i < table.size(); i++)
+    {
+        cout << "\t\t  ";
+        if (i == 1) {
+            for (int i = 0; i < (int)(table[0].size() - 2) * 7; i++) cout << "-";
+            cout << "---";
+        }
+        cout << "\n";
+        for (int k = 0; k < (int)table[0].size(); k++)
+        {
+            if (k == 1 && i != 0) cout << setw(4) << "|" << table[i][k] << "   ";
+            else  cout << setw(5) << table[i][k] << "  ";
+        }
+        cout << endl;
+    }
+    cout << endl;
+}
+
+vector<string> reduceTable(vector<string> EPI, vector<vector<string>> CC) {
+    set<string> EPrimes;
+    for (int i = 0; i < EPI.size(); i++) {
+        EPrimes.insert(EPI[i]);
+    }
+    //    cout << "Essential Primes: \n";
+    //    for(auto u : EPI) cout << u << "\n";
+
+    set<int> removeRow, removeCol;
+    for (int i = 0; i < CC.size(); i++) {
+        if (EPrimes.count(CC[i][0])) {
+            removeRow.insert(i);
+            for (int j = 1; j < CC[i].size(); j++) {
+                if (CC[i][j] == "x") removeCol.insert(j);
+            }
+        }
+    }
+
+    // remove rows covered by essential prime implicants
+    for (int i = (int)CC.size() - 1; i >= 0; i--) {
+        if (removeRow.count(i)) CC.erase(CC.begin() + i);
+    }
+
+    // remove minterms covered by essential prime implicants
+    for (int i = (int)CC.size() - 1; i >= 0; i--) {
+        if (removeCol.count(i)) CC[i].erase(CC[i].begin() + i);
+    }
+
+    //string s1 = "\nReduced PI Table after removing Essential Prime Implicants";
+    //printReducedPITable(CC, s1);
+
+
+    vector<string> sol = remove_dominating_rows_and_columns(CC);
+
+    return sol;
+}
+
+
 void Handlinginput() {
     bool test1 = 1;
     bool test2 = 1;
