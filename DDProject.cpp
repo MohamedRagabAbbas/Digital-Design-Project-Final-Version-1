@@ -1,54 +1,3 @@
-/*bool validateExpression(string input)
-{
-
-    bool hasplus = 0;
-    for (int i = 0; i < input.length(); i++)
-    {
-        if (input[i] == '+') hasplus = 1;
-        if (input[i] == '*')
-            return 0;
-    }
-    return hasplus;
-}
-
-bool Evaluate(string term, map<char, int> indexOf, vector<bool> table)
-{
-    string newTerm;
-    vector<bool> res;
-    bool temp = 1;
-    bool result = 0;
-    for (int i = 0; i < term.length(); i++)
-    {
-        if (i != term.length()-1)
-        {
-            if (term[i + 1] != '`')
-            {
-                newTerm += !table[indexOf[term[i]]];
-
-                //int i = stoi(std::string(1, c));
-                i = i + 1;
-                continue;
-            }
-        }
-        if (term[i] != '+')
-        {
-            temp *= table[indexOf[term[i]]];
-        }
-        else
-        {
-            res.push_back(temp);
-            temp=1;
-        }
-    }
-    res.push_back(temp);
-    temp = 0;
-    for (int i = 0; i < res.size(); i++)
-        temp += res[i];
-    return temp;
-}*/
-
-
-
 #include <iostream>
 #include <iomanip>
 #include <vector>
@@ -708,7 +657,7 @@ vector<Implicant> generateMinterms(vector<int> m)
 
 vector<vector<bool>> fillTableWithMinterms(vector<int> minterms) {
     sort(minterms.begin(), minterms.end());
-    int c = minterms.back();
+    if(minterms.size()!= 0) int c = minterms.back();
     int size = log2(minterms.back()) + 1;
     vector<vector<bool>> table = generateTruthTable(size);
     for (int i = 0; i < minterms.size(); i++)
@@ -879,7 +828,7 @@ vector<string> epi(vector <Implicant>& prim, vector<int>& m) {
 
 
 
-map<string, int>  Columns(vector<vector<string>>& matrix)
+map<string, int> Columns(vector<vector<string>>& matrix)
 {
     map<string, int> m{};
     for (int i = 1; i < matrix.size(); i++)
@@ -902,7 +851,7 @@ map<string, int>  Columns(vector<vector<string>>& matrix)
 
 }
 
-map<string, int>  Rows(vector<vector<string>>& matrix, map<string, int> c)
+map<string, int> Rows(vector<vector<string>>& matrix, map<string, int> c)
 {
     map<string, int> r{};
     for (int i = 1; i < matrix.size(); i++)
@@ -973,6 +922,39 @@ vector<string> remove_dominating_rows_and_columns(vector<vector<string>>& matrix
     ///*0 2 3 5 7 9 11 13 14 16 18 24 26 28 30*/
 }
 
+vector<string> reduceTable(vector<string> EPI, vector<vector<string>> CC) {
+    set<string> EPrimes;
+    for (int i = 0; i < EPI.size(); i++) {
+        EPrimes.insert(EPI[i]);
+    }
+    //    cout << "Essential Primes: \n";
+    //    for(auto u : EPI) cout << u << "\n";
+
+    set<int> removeRow, removeCol;
+    for (int i = 0; i < CC.size(); i++) {
+        if (EPrimes.count(CC[i][0])) {
+            removeRow.insert(i);
+            for (int j = 1; j < CC[i].size(); j++) {
+                if (CC[i][j] == "x") removeCol.insert(j);
+            }
+        }
+    }
+
+    for (int i = (int)CC.size() - 1; i >= 0; i--) {
+        if (removeRow.count(i)) CC.erase(CC.begin() + i);
+    }
+
+    for (int i = (int)CC.size() - 1; i >= 0; i--) {
+        if (removeCol.count(i)) CC[i].erase(CC[i].begin() + i);
+    }
+
+
+
+    vector<string> sol = remove_dominating_rows_and_columns(CC);
+
+    return sol;
+}
+
 void printReducedPITable(vector<vector<string>> table, string s) {
 
     for (int i = 0; i < (int)table[0].size() / 2 * 6 - 1; i++) cout << " ";
@@ -995,42 +977,6 @@ void printReducedPITable(vector<vector<string>> table, string s) {
     cout << endl;
 }
 
-vector<string> reduceTable(vector<string> EPI, vector<vector<string>> CC) {
-    set<string> EPrimes;
-    for (int i = 0; i < EPI.size(); i++) {
-        EPrimes.insert(EPI[i]);
-    }
-    //    cout << "Essential Primes: \n";
-    //    for(auto u : EPI) cout << u << "\n";
-
-    set<int> removeRow, removeCol;
-    for (int i = 0; i < CC.size(); i++) {
-        if (EPrimes.count(CC[i][0])) {
-            removeRow.insert(i);
-            for (int j = 1; j < CC[i].size(); j++) {
-                if (CC[i][j] == "x") removeCol.insert(j);
-            }
-        }
-    }
-
-    // remove rows covered by essential prime implicants
-    for (int i = (int)CC.size() - 1; i >= 0; i--) {
-        if (removeRow.count(i)) CC.erase(CC.begin() + i);
-    }
-
-    // remove minterms covered by essential prime implicants
-    for (int i = (int)CC.size() - 1; i >= 0; i--) {
-        if (removeCol.count(i)) CC[i].erase(CC[i].begin() + i);
-    }
-
-    //string s1 = "\nReduced PI Table after removing Essential Prime Implicants";
-    //printReducedPITable(CC, s1);
-
-
-    vector<string> sol = remove_dominating_rows_and_columns(CC);
-
-    return sol;
-}
 
 void minimized_expression(vector<vector<string>> final_table, vector<string> EPI) {
 
@@ -1057,18 +1003,15 @@ void minimized_expression(vector<vector<string>> final_table, vector<string> EPI
     cout << "\n";
 }
 
-
-
-bool validateExpression(string input)
-{
+bool validateExpression(string input){
     for (int i = input.size() - 1; i >= 0; i--) {
         if (input[i] == ' ') input.pop_back();
     }
-    int nonVariables = 0;
+    int noOfVariables = 0;
     for (int i = 0; i < input.size(); i++) {
-        if ((input[i] < 'a' || input[i] > 'z') && input[i] != '`') nonVariables++;
+        if ((input[i] < 'a' || input[i] > 'z') && input[i] != '`') noOfVariables++;
     }
-    if (nonVariables == 0) return true;
+    if (noOfVariables == 0) return true;
 
     bool hasplus = 0;
     for (int i = 0; i < input.length(); i++)
@@ -1084,171 +1027,29 @@ bool validateExpression(string input)
 
 string modify(string input) {
 
-    for (int i = 0; i < input.size() - 1; i++)
-    {
-        if (((input[i] >= 'A' && input[i] <= 'Z') || (input[i] >= 'a' && input[i] <= 'z') || (input[i] >= '`')) && ((input[i + 1] >= 'A' && input[i + 1] <= 'Z') || (input[i + 1] >= 'a' && input[i + 1] <= 'z')))
-        {
+    for (int i = 0; i < input.size() - 1; i++) {
+        if (((input[i] >= 'a' && input[i] <= 'z') || (input[i] == '`')) && ((input[i + 1] >= 'a' && input[i + 1] <= 'z'))){
             input.insert(input.begin() + i + 1, '*');
         }
     }
     return input;
 }
 
-
-
-map<string, int>  Columns(vector<vector<string>>& matrix)
-{
-    map<string, int> m{};
-    for (int i = 1; i < matrix.size(); i++)
-    {
-        for (int j = 1; j < matrix[i].size(); j++)
-        {
-            if (matrix[i][j] == "x")
-            {
-                m[matrix[0][j]]++;
+vector<int> stringToInt(string term){
+    vector<int> answer;
+    term += " ";
+    string temp = "";
+    for(int i = 0; i < term.size(); i++){
+        if(term[i] == ' '){
+            if(temp.size() != 0){
+                answer.push_back(stoi(temp));
+                temp = "";
             }
         }
+        else temp += term[i];
     }
-    vector<pair<string, int>> v(m.begin(), m.end());
-    sort(v.begin(), v.end(), [](const auto& a, const auto& b) {
-        return a.second < b.second;
-        });
-    reverse(v.begin(), v.end());
-
-    return m;
-
+    return answer;
 }
-
-map<string, int>  Rows(vector<vector<string>>& matrix, map<string, int> c)
-{
-    map<string, int> r{};
-    for (int i = 1; i < matrix.size(); i++)
-    {
-        for (int j = 1; j < matrix[i].size(); j++)
-        {
-            if (matrix[i][j] == "x")
-            {
-                r[matrix[i][0]] += c[matrix[0][j]];
-            }
-        }
-    }
-
-    return r;
-
-}
-
-void removeColumns(std::vector<std::vector<std::string>>& table, const std::vector<int>& columnsToRemove) {
-    // Sort the vector of columns to remove in descending order
-    std::vector<int> sortedColumnsToRemove = columnsToRemove;
-    std::sort(sortedColumnsToRemove.begin(), sortedColumnsToRemove.end(), std::greater<int>());
-
-    // Remove the specified columns from each row
-    for (auto& row : table) {
-        for (const auto& colIndex : sortedColumnsToRemove) {
-            row.erase(row.begin() + colIndex);
-        }
-    }
-}
-
-
-vector<string> remove_dominating_rows_and_columns(vector<vector<string>>& matrix) {
-    set<int> col;
-    set<int> row;
-
-    vector<string>sol;
-
-    while (matrix.size() > 1 && (matrix[0].size() > 1))
-    {
-        map<string, int> rows = Rows(matrix, Columns(matrix));
-        vector<pair<string, int>> v(rows.begin(), rows.end());
-        vector<int>col;
-        sort(v.begin(), v.end(), [](const auto& a, const auto& b)
-            {
-                return a.second < b.second;
-            });
-        reverse(v.begin(), v.end());
-        sol.push_back(v[0].first);
-        for (int i = 0; i < matrix.size(); i++)
-        {
-            if (matrix[i][0] == v[0].first)
-            {
-                for (int k = 0; k < matrix[i].size(); k++)
-                {
-                    if (matrix[i][k] == "x")
-                    {
-                        col.push_back(k);
-                    }
-                }
-                matrix.erase(matrix.begin() + i);
-                removeColumns(matrix, col);
-            }
-        }
-    }
-
-    return sol;
-
-    ///*0 2 3 5 7 9 11 13 14 16 18 24 26 28 30*/
-}
-
-void printReducedPITable(vector<vector<string>> table, string s) {
-
-    for (int i = 0; i < (int)table[0].size() / 2 * 6 - 1; i++) cout << " ";
-    cout << s << "\n";
-    for (int i = 0; i < table.size(); i++)
-    {
-        cout << "\t\t  ";
-        if (i == 1) {
-            for (int i = 0; i < (int)(table[0].size() - 2) * 7; i++) cout << "-";
-            cout << "---";
-        }
-        cout << "\n";
-        for (int k = 0; k < (int)table[0].size(); k++)
-        {
-            if (k == 1 && i != 0) cout << setw(4) << "|" << table[i][k] << "   ";
-            else  cout << setw(5) << table[i][k] << "  ";
-        }
-        cout << endl;
-    }
-    cout << endl;
-}
-
-vector<string> reduceTable(vector<string> EPI, vector<vector<string>> CC) {
-    set<string> EPrimes;
-    for (int i = 0; i < EPI.size(); i++) {
-        EPrimes.insert(EPI[i]);
-    }
-    //    cout << "Essential Primes: \n";
-    //    for(auto u : EPI) cout << u << "\n";
-
-    set<int> removeRow, removeCol;
-    for (int i = 0; i < CC.size(); i++) {
-        if (EPrimes.count(CC[i][0])) {
-            removeRow.insert(i);
-            for (int j = 1; j < CC[i].size(); j++) {
-                if (CC[i][j] == "x") removeCol.insert(j);
-            }
-        }
-    }
-
-    // remove rows covered by essential prime implicants
-    for (int i = (int)CC.size() - 1; i >= 0; i--) {
-        if (removeRow.count(i)) CC.erase(CC.begin() + i);
-    }
-
-    // remove minterms covered by essential prime implicants
-    for (int i = (int)CC.size() - 1; i >= 0; i--) {
-        if (removeCol.count(i)) CC[i].erase(CC[i].begin() + i);
-    }
-
-    //string s1 = "\nReduced PI Table after removing Essential Prime Implicants";
-    //printReducedPITable(CC, s1);
-
-
-    vector<string> sol = remove_dominating_rows_and_columns(CC);
-
-    return sol;
-}
-
 
 void Handlinginput() {
     bool test1 = 1;
@@ -1257,15 +1058,13 @@ void Handlinginput() {
     string ex;
     vector<int> minterms;
     vector<Implicant> Minterms;
-    vector<int> donotCare;
+    vector<int> dontCare;
     vector<vector<bool>> table;
     vector<string> pos;
     vector<string> sop;
     vector<Implicant> all;
     vector<string> AllEPI;
     int temp;
-    int size;
-    int size2;
     while (test1)
     {
         test1 = 1;
@@ -1275,58 +1074,56 @@ void Handlinginput() {
         cout << "2. Minterms" << endl;
         cout << "3. Minterms and Don't Care Terms" << endl;
         cout << "0. Exit" << endl;
-        int input_type;
+        int input;
         cout << "Enter Your Choice : ";
-        cin >> input_type;
+        cin >> input;
 
-        switch (input_type)
+        switch (input)
         {
-        case 1:
-            cout << "Please enter your expression (SoP form): ";
-            cin.ignore();
-            getline(cin, ex);
-            if (!validateExpression(ex))
-            {
-                cout << "This Expression Is Not Valid" << endl;
-                test2 = 0;
+            case 1: {
+                cout << "Please enter your expression (SoP form): ";
+                cin.ignore();
+                getline(cin, ex);
+                if (!validateExpression(ex))
+                {
+                    cout << "This Expression Is Not Valid" << endl;
+                    test2 = 0;
+                }
+                ex = modify(ex);
+                cout << ex << endl;
+                break;
             }
-            ex = modify(ex);
-            cout << ex << endl;
-            break;
-        case 2:
-            cout << "Please enter the number of minterms : ";
-            cin >> size;
-            for (int i = 0; i < size; i++)
-            {
-                cout << "Enter minterm " << i + 1 << " : ";
-                cin >> temp;
-                minterms.push_back(temp);
+            case 2:{
+                cout << "Please enter the minterms: ";
+                string min = "";
+                cin.ignore();
+                getline(cin,min);
+                // check here
+                minterms = stringToInt(min);
+                break;
             }
-            break;
-        case 3:
-            cout << "Please enter the number of minterms : ";
-            cin >> size;
-            cout << "Please enter the number of do not care terms : ";
-            cin >> size2;
-            for (int i = 0; i < size; i++)
-            {
-                cout << "Enter minterm " << i + 1 << " : ";
-                cin >> temp;
-                minterms.push_back(temp);
+            case 3:{
+                cout << "Please enter the minterms: ";
+                string min = "", dc = "";
+                cin.ignore();
+                getline(cin,min);
+                // check here
+                minterms = stringToInt(min);
+                cout << "Please enter the dont care terms: ";
+                //cin.ignore();
+                getline(cin,dc);
+                // check here
+                dontCare = stringToInt(dc);
+                break;
             }
-            for (int i = 0; i < size2; i++)
-            {
-                cout << "Enter do not care minterm " << i + 1 << " : ";
-                cin >> temp;
-                donotCare.push_back(temp);
+            case 0:{
+                test1 = 0;
+                break;
             }
-            break;
-        case 0:
-            test1 = 0;
-            break;
-        default:
-            cout << "Invalid input type. Exiting program." << endl;
-            return;
+            default: {
+                cout << "Invalid input type. Exiting program." << "\n";
+                return;
+            }
         }
 
         // Perform operation based on the user's choice
@@ -1334,256 +1131,270 @@ void Handlinginput() {
         {
             // Display operation options to the user
 
-            cout << endl << "Please choose an operation: " << endl;
-            cout << "1. Truth table" << endl;
-            cout << "2. Canonical SOP" << endl;
-            cout << "3. Canonical POS" << endl;
-            cout << "4. All PIs" << endl;
-            cout << "5. Print Coverage Chart" << endl;
-            cout << "6. All EPIs" << endl;
-            cout << "7. All implicants that are not covered by EPIs" << endl;
-            cout << "8. Minimized Function" << endl;
-            cout << "9. Start from beginning" << endl;
-            cout << "0. Exit" << endl;
+            cout << "\n" << "Please choose an operation: " << "\n";
+            cout << "1. Truth Table" << "\n";
+            cout << "2. Canonical SoP" << "\n";
+            cout << "3. Canonical PoS" << "\n";
+            cout << "4. All PIs" << "\n";
+            cout << "5. Print Coverage Chart" << "\n";
+            cout << "6. All the EPIs" << "\n";
+            cout << "7. Minterms that are not covered by the EPIs" << "\n";
+            cout << "8. Minimized Expression" << "\n";
+            cout << "9. Start from beginning" << "\n";
+            cout << "0. Exit" << "\n";
             int operation = 0;
             cout << "Enter Your Choice : ";
             cin >> operation;
             switch (operation)
             {
-            case 1:
-                if (input_type == 1)
-                {
-                    Term = returnVariables(ex);
-                    table = generateTruthTable(Term.size());
-                    output(table, ex);
-                    printTruthTable(table, Term);
-                }
-                else if (input_type == 2)
-                {
-                    table = fillTableWithMinterms(minterms);
-                    printTruthTable(table, "");
-                }
-                break;
-            case 2:
-                if (input_type == 1)
-                {
-                    Term = returnVariables(ex);
-                    table = generateTruthTable(Term.size());
-                    output(table, ex);
-                    SoP(table, Term, sop);
-                    printSoP(sop);
-                }
-                else if (input_type == 2)
-                {
-                    table = fillTableWithMinterms(minterms);
-                    SoP(table, getTerm(minterms), sop);
-                    printSoP(sop);
-                }
-                break;
-            case 3:
-                if (input_type == 1)
-                {
-                    Term = returnVariables(ex);
-                    table = generateTruthTable(Term.size());
-                    output(table, ex);
-                    PoS(table, Term, pos);
-                    printPoS(pos);
-                }
-                else if (input_type == 2)
-                {
-                    table = fillTableWithMinterms(minterms);
-                    PoS(table, getTerm(minterms), pos);
-                    printPoS(pos);
-                }
-                break;
-            case 4:
-                if (input_type == 1)
-                {
-                    Term = returnVariables(ex);
-                    table = generateTruthTable(Term.size());
-                    output(table, ex);
-                    Minterms = getMinterms(table);
-                    all = getPrimeImplicants(Minterms);
-                    printAllPrimeImplicants(all);
-                }
-                else if (input_type == 2)
-                {
-                    vector<Implicant> mins = generateMinterms(minterms);
-                    all = getPrimeImplicants(mins);
-                    printAllPrimeImplicants(all);
-                }
-                else if (input_type == 3)
-                {
-                    vector<int> allterms = merge(minterms, donotCare);
-                    vector<Implicant> mins = generateMinterms(allterms);
-                    all = getPrimeImplicants(mins);
-                    printAllPrimeImplicants(all);
-                }
-
-                break;
-            case 5:
-                if (input_type == 1)
-                {
-                    Term = returnVariables(ex);
-                    table = generateTruthTable(Term.size());
-                    output(table, ex);
-                    vector<int> allminterms = getMintermsAsInt(table);
-                    Minterms = getMinterms(table);
-                    all = getPrimeImplicants(Minterms);
-                    PrintCoverageChart(CoverageChart(all, allminterms));
-
-                }
-                else if (input_type == 2)
-                {
-                    vector<int> copy = minterms;
-                    //vector<int> copy2 = donotCare;
-                    //vector<int> copy3 = merge(minterms, donotCare);
-                    vector<Implicant> mins = generateMinterms(copy);
-                    all = getPrimeImplicants(mins);
-                    PrintCoverageChart(CoverageChart(all, copy));
-                }
-                else if (input_type == 3)
-                {
-                    vector<int> copy = minterms;
-                    vector<int> copy2 = donotCare;
-                    vector<int> copy3 = merge(minterms, donotCare);
-                    vector<Implicant> mins = generateMinterms(copy3);
-                    all = getPrimeImplicants(mins);
-                    PrintCoverageChart(CoverageChart(all, copy));
-                }
-
-                break;
-            case 6:
-                if (input_type == 1)
-                {
-                    Term = returnVariables(ex);
-                    table = generateTruthTable(Term.size());
-                    output(table, ex);
-                    vector<int> allminterms = getMintermsAsInt(table);
-                    Minterms = getMinterms(table);
-                    all = getPrimeImplicants(Minterms);
-                    AllEPI = epi(all, allminterms);
-                    cout << "\nAll Essential Prime Implicants:\n\n";
-                    for (int i = 0; i < AllEPI.size(); i++)
+                case 1: {
+                    if (input == 1)
                     {
+                        Term = returnVariables(ex);
+                        table = generateTruthTable(Term.size());
+                        output(table, ex);
+                        printTruthTable(table, Term);
+                    }
+                    else if (input == 2 || input == 3)
+                    {
+                        table = fillTableWithMinterms(minterms);
+                        printTruthTable(table, "");
+                    }
+                    break;
+                }
+                case 2: {
+                    if (input == 1)
+                    {
+                        Term = returnVariables(ex);
+                        table = generateTruthTable(Term.size());
+                        output(table, ex);
+                        SoP(table, Term, sop);
+                        printSoP(sop);
+                    }
+                    else if (input == 2 || input == 3)
+                    {
+                        table = fillTableWithMinterms(minterms);
+                        SoP(table, getTerm(minterms), sop);
+                        printSoP(sop);
+                    }
+                    break;
+                }
+                case 3: {
+                    if (input == 1)
+                    {
+                        Term = returnVariables(ex);
+                        table = generateTruthTable(Term.size());
+                        output(table, ex);
+                        PoS(table, Term, pos);
+                        printPoS(pos);
+                    }
+                    else if (input == 2 || input == 3)
+                    {
+                        table = fillTableWithMinterms(minterms);
+                        PoS(table, getTerm(minterms), pos);
+                        printPoS(pos);
+                    }
+                    break;
+                }
+                case 4: {
+                    if (input == 1)
+                    {
+                        Term = returnVariables(ex);
+                        table = generateTruthTable(Term.size());
+                        output(table, ex);
+                        Minterms = getMinterms(table);
+                        all = getPrimeImplicants(Minterms);
+                        printAllPrimeImplicants(all);
+                    }
+                    else if (input == 2)
+                    {
+                        vector<Implicant> mins = generateMinterms(minterms);
+                        all = getPrimeImplicants(mins);
+                        printAllPrimeImplicants(all);
+                    }
+                    else if (input == 3)
+                    {
+                        vector<int> allterms = merge(minterms, dontCare);
+                        vector<Implicant> mins = generateMinterms(allterms);
+                        all = getPrimeImplicants(mins);
+                        printAllPrimeImplicants(all);
+                    }
+                    
+                    break;
+                }
+                case 5: {
+                    if (input == 1)
+                    {
+                        Term = returnVariables(ex);
+                        table = generateTruthTable(Term.size());
+                        output(table, ex);
+                        vector<int> allminterms = getMintermsAsInt(table);
+                        Minterms = getMinterms(table);
+                        all = getPrimeImplicants(Minterms);
+                        PrintCoverageChart(CoverageChart(all, allminterms));
+                        
+                    }
+                    else if (input == 2)
+                    {
+                        vector<int> copy = minterms;
+                        //vector<int> copy2 = donotCare;
+                        //vector<int> copy3 = merge(minterms, donotCare);
+                        vector<Implicant> mins = generateMinterms(copy);
+                        all = getPrimeImplicants(mins);
+                        PrintCoverageChart(CoverageChart(all, copy));
+                    }
+                    else if (input == 3)
+                    {
+                        vector<int> copy = minterms;
+                        vector<int> copy2 = dontCare;
+                        vector<int> copy3 = merge(minterms, dontCare);
+                        vector<Implicant> mins = generateMinterms(copy3);
+                        all = getPrimeImplicants(mins);
+                        PrintCoverageChart(CoverageChart(all, copy));
+                    }
+                    
+                    break;
+                }
+                case 6: {
+                    if (input == 1)
+                    {
+                        Term = returnVariables(ex);
+                        table = generateTruthTable(Term.size());
+                        output(table, ex);
+                        vector<int> allminterms = getMintermsAsInt(table);
+                        Minterms = getMinterms(table);
+                        all = getPrimeImplicants(Minterms);
+                        AllEPI = epi(all, allminterms);
+                        cout << "\nAll Essential Prime Implicants:\n\n";
+                        for (int i = 0; i < AllEPI.size(); i++)
+                        {
+                            
+                            cout << setw(6) << fromImplicantToTerm(AllEPI[i]) << " : " << AllEPI[i] << endl;
+                        }
+                    }
+                    else if (input == 2 || input == 3)
+                    {
+                        vector<int> copy = minterms;
+                        vector<int> copy2 = dontCare;
+                        vector<int> copy3 = merge(minterms, dontCare);
+                        vector<Implicant> mins = generateMinterms(copy3);
+                        all = getPrimeImplicants(mins);
+                        AllEPI = epi(all, copy);
+                        cout << "\nAll Essential Prime Implicants:\n\n";
+                        for (int i = 0; i < AllEPI.size(); i++)
+                        {
+                            
+                            cout << setw(5) << fromImplicantToTerm(AllEPI[i]) << " : " << AllEPI[i] << endl;
+                        }
+                        cout << endl;
+                    }
+                    break;
+                }
+                case 7: {
+                    if (input == 1)
+                    {
+                        Term = returnVariables(ex);
+                        table = generateTruthTable(Term.size());
+                        output(table, ex);
+                        vector<int> allminterms = getMintermsAsInt(table);
+                        Minterms = getMinterms(table);
+                        all = getPrimeImplicants(Minterms);
+                        AllEPI = epi(all, allminterms);
+                        cout << endl;
+                        PrintCoverageChart(CoverageChart(all, allminterms));
+                        cout << "\nThe minterms that are not covered by EPIs: ";
+                        for (int i = 0; i < allminterms.size(); i++)
+                        {
+                            if (i == 0) cout << "(";
+                            cout << allminterms[i];
+                            if (i != (int)allminterms.size() - 1) cout << ", ";
+                            else cout << ")";
+                        }
+                        cout << endl;
+                    }
+                    else if (input == 2 || input == 3)
+                    {
+                        vector<int> copy = minterms;
+                        vector<int> copy2 = dontCare;
+                        vector<int> copy3 = merge(minterms, dontCare);
+                        vector<Implicant> mins = generateMinterms(copy3);
+                        all = getPrimeImplicants(mins);
+                        AllEPI = epi(all, copy);
+                        cout << endl;
+                        PrintCoverageChart(CoverageChart(all, copy));
+                        cout << "\nThe minterms that are not covered by EPIs : ";
+                        for (int i = 0; i < copy.size(); i++)
+                        {
+                            if (i == 0) cout << "(";
+                            cout << copy[i];
+                            if (i != (int)copy.size() - 1) cout << ", ";
+                            else cout << ")";
+                        }
+                        cout << endl;
+                    }
+                    break;
+                }
+                case 8: {
+                    if (input == 1) {
+                        Term = returnVariables(ex);
+                        table = generateTruthTable(Term.size());
+                        output(table, ex);
+                        vector<int> allminterms = getMintermsAsInt(table);
+                        Minterms = getMinterms(table);
+                        all = getPrimeImplicants(Minterms);
+                        AllEPI = epi(all, allminterms);
+                        
+                        vector<string> minimized_expression = reduceTable(AllEPI, CoverageChart(all, allminterms));
 
-                        cout << setw(6) << fromImplicantToTerm(AllEPI[i]) << " : " << AllEPI[i] << endl;
+                        vector<string> answer;
+                        for(string u : AllEPI) answer.push_back(fromImplicantToTerm(u));
+                        for(string u : minimized_expression) answer.push_back(fromImplicantToTerm(u));
+                        
+                        cout << "\nMinimized Expression: ";
+                        for(int i = 0; i < (int)answer.size()-1; i++) cout << answer[i] << " + ";
+                        if(answer.size() != 0) cout << answer.back() << "\n";
                     }
-                }
-                else if (input_type == 2 || input_type == 3)
-                {
-                    vector<int> copy = minterms;
-                    vector<int> copy2 = donotCare;
-                    vector<int> copy3 = merge(minterms, donotCare);
-                    vector<Implicant> mins = generateMinterms(copy3);
-                    all = getPrimeImplicants(mins);
-                    AllEPI = epi(all, copy);
-                    cout << "\nAll Essential Prime Implicants:\n\n";
-                    for (int i = 0; i < AllEPI.size(); i++)
-                    {
-
-                        cout << setw(5) << fromImplicantToTerm(AllEPI[i]) << " : " << AllEPI[i] << endl;
+                    else if (input == 2 || input == 3) {
+                        vector<int> copy = minterms;
+                        vector<int> copy2 = dontCare;
+                        vector<int> copy3 = merge(minterms, dontCare);
+                        vector<Implicant> mins = generateMinterms(copy3);
+                        all = getPrimeImplicants(mins);
+                        AllEPI = epi(all, copy);
+                        
+                        vector<string> minimized_expression = reduceTable(AllEPI, CoverageChart(all, copy));
+                        /*0 2 3 5 7 9 11 13 14 16 18 24 26 28 30*/
+                        
+                        vector<string> answer;
+                        for(string u : AllEPI) answer.push_back(fromImplicantToTerm(u));
+                        for(string u : minimized_expression) answer.push_back(fromImplicantToTerm(u));
+                        
+                        cout << "\nMinimized Expression: ";
+                        for(int i = 0; i < (int)answer.size()-1; i++) cout << answer[i] << " + ";
+                        if(answer.size() != 0) cout << answer.back() << "\n";
                     }
-                    cout << endl;
+                    break;
                 }
-                break;
-            case 7:
-                if (input_type == 1)
-                {
-                    Term = returnVariables(ex);
-                    table = generateTruthTable(Term.size());
-                    output(table, ex);
-                    vector<int> allminterms = getMintermsAsInt(table);
-                    Minterms = getMinterms(table);
-                    all = getPrimeImplicants(Minterms);
-                    AllEPI = epi(all, allminterms);
-                    cout << endl;
-                    PrintCoverageChart(CoverageChart(all, allminterms));
-                    cout << "\nThe minterms that are not covered by EPIs: ";
-                    for (int i = 0; i < allminterms.size(); i++)
-                    {
-                        if (i == 0) cout << "(";
-                        cout << allminterms[i];
-                        if (i != (int)allminterms.size() - 1) cout << ", ";
-                        else cout << ")";
-                    }
-                    cout << endl;
+                case 9: {
+                    test2 = 0;
+                    break;
                 }
-                else if (input_type == 2 || input_type == 3)
-                {
-                    vector<int> copy = minterms;
-                    vector<int> copy2 = donotCare;
-                    vector<int> copy3 = merge(minterms, donotCare);
-                    vector<Implicant> mins = generateMinterms(copy3);
-                    all = getPrimeImplicants(mins);
-                    AllEPI = epi(all, copy);
-                    cout << endl;
-                    PrintCoverageChart(CoverageChart(all, copy));
-                    cout << "\nThe minterms that are not covered by EPIs : ";
-                    for (int i = 0; i < copy.size(); i++)
-                    {
-                        if (i == 0) cout << "(";
-                        cout << copy[i];
-                        if (i != (int)copy.size() - 1) cout << ", ";
-                        else cout << ")";
-                    }
-                    cout << endl;
+                case 0: {
+                    test1 = 0;
                 }
-                break;
-            case 8:
-                if (input_type == 1) {
-                    Term = returnVariables(ex);
-                    table = generateTruthTable(Term.size());
-                    output(table, ex);
-                    vector<int> allminterms = getMintermsAsInt(table);
-                    Minterms = getMinterms(table);
-                    all = getPrimeImplicants(Minterms);
-                    AllEPI = epi(all, allminterms);
-                    //vector<vector<string>> reducedPITable = reduceTable(AllEPI, CoverageChart(all, allminterms));
-
-                   // minimized_expression(reducedPITable, AllEPI);
+                default: {
+                    cout << "Invalid operation. Exiting program." << endl;
+                    return;
                 }
-                else if (input_type == 2 || input_type == 3) {
-                    vector<int> copy = minterms;
-                    vector<int> copy2 = donotCare;
-                    vector<int> copy3 = merge(minterms, donotCare);
-                    vector<Implicant> mins = generateMinterms(copy3);
-                    all = getPrimeImplicants(mins);
-                    AllEPI = epi(all, copy);
-                    //vector<Implicant> m=findMinimumCover(all, copy);
-                    //for (int i = 0; i < m.size(); i++)
-                    //{
-                    //    cout << m[i].term << endl;
-                    //}
-
-                    vector<string> minimized_expression = reduceTable(AllEPI, CoverageChart(all, copy));
-                    /*0 2 3 5 7 9 11 13 14 16 18 24 26 28 30*/
-                    for (int i = 0; i < AllEPI.size(); i++)
-                    {
-                        cout << setw(5) << fromImplicantToTerm(AllEPI[i]) << "      ";
-                    }
-                    for (int i = 0; i < minimized_expression.size(); i++)
-                    {
-                        cout << setw(5) << fromImplicantToTerm(minimized_expression[i]) << "      ";
-                    }
-                }
-                break;
-            case 9:
-                test2 = 0;
-                break;
-            case 0:
-                test1 = 0;
-            default:
-                cout << "Invalid operation. Exiting program." << endl;
-                return;
             };
         }
     }
 
 
 }
+
+
 int main()
 {
     Handlinginput();
-
 }
