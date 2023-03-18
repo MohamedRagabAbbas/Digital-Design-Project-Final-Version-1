@@ -681,8 +681,8 @@ vector<Implicant> generateMinterms(vector<int> m) {
 vector<vector<bool>> fillTableWithMinterms(vector<int> minterms) {
     sort(minterms.begin(), minterms.end());
     if (minterms.size() != 0) int c = minterms.back();
-    int size;
-    if(minterms.size() != 0) log2(minterms.back()) + 1;
+    int size = 0;
+    if(minterms.size() != 0) size = log2(minterms.back()) + 1;
     vector<vector<bool>> table = generateTruthTable(size);
     for (int i = 0; i < minterms.size(); i++)
         table[minterms[i]][table[i].size() - 1] = 1;
@@ -1458,4 +1458,3 @@ int main()
 {
     Handlinginput();
 }
-
