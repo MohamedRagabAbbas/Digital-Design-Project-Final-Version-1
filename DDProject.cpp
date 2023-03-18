@@ -1004,24 +1004,24 @@ void printMinimizedExpression(vector<string> answer) {
 
 bool validateExpression(string input) {
     for (int i = input.size() - 1; i >= 0; i--) {
-        if (input[i] == ' ') input.pop_back();
+        if (input[i] == ' ') input.erase(input.begin() + i);
     }
-    int noOfVariables = 0;
+    //int noOfVariables = 0;
     for (int i = 0; i < input.size(); i++) {
-        if ((input[i] < 'a' || input[i] > 'z') && input[i] != '`') noOfVariables++;
+        if (!((input[i] >= 'a' && input[i] <= 'z') || (input[i] >= 'A' && input[i] <= 'Z') || input[i] == '+')) return 0;
     }
-    if (noOfVariables == 0) return true;
+    /*if (noOfVariables == 0) return false*/
 
-    bool hasplus = 0;
-    for (int i = 0; i < input.length(); i++)
-    {
-        if (input[i] == '+')
-            hasplus = 1;
-        if (input[i] == '*')
-            return 0;
-    }
+    //bool hasplus = 0;
+    //for (int i = 0; i < input.length(); i++)
+    //{
+    //    if (input[i] == '+')
+    //        hasplus = 1;
+    //    if (input[i] == '*')
+    //        return 0;
+    //}
 
-    return hasplus;
+    return 1;
 }
 
 string modify(string input) {
