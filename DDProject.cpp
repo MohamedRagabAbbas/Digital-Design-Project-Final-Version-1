@@ -17,25 +17,6 @@ struct Implicant;
 
 // main functions
 
-vector<vector<bool>> generateTruthTable(int num); #include <iostream>
-#include <iomanip>
-#include <vector>
-#include <stack>
-#include <string>
-#include <unordered_set>
-#include <set>
-#include <algorithm>
-#include <map>
-#include <cmath>
-#include <sstream>
-using namespace std;
-
-// struct that represents our implicants
-
-struct Implicant;
-
-// main functions
-
 vector<vector<bool>> generateTruthTable(int num);
 void SoP(const vector<vector<bool>>& table, string vnames, vector<string>& sop);
 void PoS(const vector<vector<bool>>& table, string vnames, vector<string>& sop);
@@ -106,7 +87,8 @@ string decToBin(int n) {
 
 vector<Implicant> padding(vector<Implicant>& minterms) {
     string extra = "0000000000";
-    int MAX = minterms.back().term.size();
+    int MAX;
+    if(minterms.size() != 0) MAX = minterms.back().term.size();
     for (int i = 0; i < minterms.size(); i++) {
         int need = MAX - minterms[i].term.size();
         minterms[i].term.insert(0, extra.substr(0, need));
@@ -1436,5 +1418,4 @@ int main()
 {
     Handlinginput();
 }
-
 
