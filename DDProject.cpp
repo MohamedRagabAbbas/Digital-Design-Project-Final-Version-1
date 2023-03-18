@@ -1008,7 +1008,7 @@ bool validateExpression(string input) {
     }
     //int noOfVariables = 0;
     for (int i = 0; i < input.size(); i++) {
-        if (!((input[i] >= 'a' && input[i] <= 'z') || (input[i] >= 'A' && input[i] <= 'Z') || input[i] == '+')) return 0;
+        if (!((input[i] >= 'a' && input[i] <= 'z') || (input[i] >= 'A' && input[i] <= 'Z') || input[i] == '+' || input[i] == '`')) return 0;
     }
     /*if (noOfVariables == 0) return false*/
 
