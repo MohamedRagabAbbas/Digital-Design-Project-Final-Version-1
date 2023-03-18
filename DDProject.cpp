@@ -1104,7 +1104,7 @@ void Handlinginput() {
         switch (input)
         {
         case 1: {
-            cout << "Please enter your expression (SoP form): ";
+            cout << "Please enter your expression (SoP form without brackets): ";
             cin.ignore();
             getline(cin, ex);
             if (!validateExpression(ex))
