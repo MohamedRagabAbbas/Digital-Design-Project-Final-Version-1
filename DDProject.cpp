@@ -681,7 +681,8 @@ vector<Implicant> generateMinterms(vector<int> m) {
 vector<vector<bool>> fillTableWithMinterms(vector<int> minterms) {
     sort(minterms.begin(), minterms.end());
     if (minterms.size() != 0) int c = minterms.back();
-    int size = log2(minterms.back()) + 1;
+    int size;
+    if(minterms.size() != 0) log2(minterms.back()) + 1;
     vector<vector<bool>> table = generateTruthTable(size);
     for (int i = 0; i < minterms.size(); i++)
         table[minterms[i]][table[i].size() - 1] = 1;
@@ -1066,6 +1067,12 @@ bool check(string term) {
     return true;
 }
 
+bool alwaysTrue(string ans){
+    bool flag = true;
+    for(char u : ans) if(u != '-') flag = false;
+    return flag;
+}
+
 
 void Handlinginput() {
     bool test1 = 1;
@@ -1374,9 +1381,26 @@ void Handlinginput() {
 
                     vector<string> minimized_expression = minimizing(AllEPI, CoverageChart(all, allminterms));
                     vector<string> answer;
-                    for (string u : AllEPI) answer.push_back(fromImplicantToTerm(u));
-                    for (string u : minimized_expression) answer.push_back(fromImplicantToTerm(u));
-                    printMinimizedExpression(answer);
+                    
+                    if(minimized_expression.size() == 0 && AllEPI.size() == 0){
+                        cout << "Minimized Expression: " << 0 << "\n";
+
+                    }
+                    else if(minimized_expression.size() == 0 && AllEPI.size() == 1){
+                        if(alwaysTrue(AllEPI[0])) {
+                            cout << "Minimized Expression: " << 1 << "\n";
+                        }
+                        else{
+                            for (string u : AllEPI) answer.push_back(fromImplicantToTerm(u));
+                            for (string u : minimized_expression) answer.push_back(fromImplicantToTerm(u));
+                            printMinimizedExpression(answer);
+                        }
+                    }
+                    else{
+                        for (string u : AllEPI) answer.push_back(fromImplicantToTerm(u));
+                        for (string u : minimized_expression) answer.push_back(fromImplicantToTerm(u));
+                        printMinimizedExpression(answer);
+                    }
 
                 }
                 else if (input == 2 || input == 3) {
@@ -1389,9 +1413,25 @@ void Handlinginput() {
 
                     vector<string> minimized_expression = minimizing(AllEPI, CoverageChart(all, copy));
                     vector<string> answer;
-                    for (string u : AllEPI) answer.push_back(fromImplicantToTerm(u));
-                    for (string u : minimized_expression) answer.push_back(fromImplicantToTerm(u));
-                    printMinimizedExpression(answer);
+                    if(minimized_expression.size() == 0 && AllEPI.size() == 0){
+                        cout << "Minimized Expression: " << 0 << "\n";
+
+                    }
+                    else if(minimized_expression.size() == 0 && AllEPI.size() == 1){
+                        if(alwaysTrue(AllEPI[0])) {
+                            cout << "Minimized Expression: " << 1 << "\n";
+                        }
+                        else{
+                            for (string u : AllEPI) answer.push_back(fromImplicantToTerm(u));
+                            for (string u : minimized_expression) answer.push_back(fromImplicantToTerm(u));
+                            printMinimizedExpression(answer);
+                        }
+                    }
+                    else{
+                        for (string u : AllEPI) answer.push_back(fromImplicantToTerm(u));
+                        for (string u : minimized_expression) answer.push_back(fromImplicantToTerm(u));
+                        printMinimizedExpression(answer);
+                    }
                 }
                 break;
             }
