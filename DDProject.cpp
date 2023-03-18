@@ -197,7 +197,7 @@ void printAllPrimeImplicants(vector<Implicant> implicants) {
             if (i != implicants[j].minterms.size() - 1)
                 cout << ",";
         }
-        cout << ")" << endl;
+        cout << ")" << '\n';
     }
 }
 
@@ -214,7 +214,7 @@ void printTruthTable(vector<vector<bool>> table, string Term) {
         for (int i = 0; i < (int)table[0].size() - 1; i++)
             cout << letter++ << "    ";
     }
-    cout << "F" << endl;
+    cout << "F" << '\n';
 
     for (int i = 0; i < ((int)table[0].size() - 1) * 5; i++) cout << "-";
     cout << "-\n";
@@ -223,7 +223,7 @@ void printTruthTable(vector<vector<bool>> table, string Term) {
         for (int j = 0; j < table[0].size(); j++) {
             cout << table[i][j] << "    ";
         }
-        cout << endl;
+        cout << '\n';
     }
 }
 
@@ -233,8 +233,8 @@ void printSoP(vector<string> exp) {
     for (int i = 0; i < (int)exp.size() - 1; i++) {
         cout << "(" << exp[i] << ")" << " + ";
     }
-    if (exp.size() != 0) cout << "(" << exp[exp.size() - 1] << ")" << endl;
-    else cout << '0' << endl;
+    if (exp.size() != 0) cout << "(" << exp[exp.size() - 1] << ")" << '\n';
+    else cout << '0' << '\n';
 }
 
 void printPoS(vector<string> exp) {
@@ -243,7 +243,7 @@ void printPoS(vector<string> exp) {
     for (int i = 0; i < (int)exp.size() - 1; i++) {
         cout << "(" << exp[i] << ")" << " * ";
     }
-    if (exp.size() != 0) cout << "(" << exp[exp.size() - 1] << ")" << endl;
+    if (exp.size() != 0) cout << "(" << exp[exp.size() - 1] << ")" << '\n';
     else cout << '1' << "\n";
 }
 
@@ -779,9 +779,9 @@ void PrintCoverageChart(vector<vector<string>> table) {
             if (k == 1 && i != 0) cout << setw(4) << "|" << table[i][k] << "  ";
             else  cout << setw(5) << table[i][k] << "  ";
         }
-        cout << endl;
+        cout << '\n';
     }
-    cout << endl;
+    cout << '\n';
 }
 
 vector<string> epi(vector <Implicant>& prim, vector<int>& m) {
@@ -1007,9 +1007,9 @@ void printReducedPITable(vector<vector<string>> table, string s) {
             if (k == 1 && i != 0) cout << setw(4) << "|" << table[i][k] << "   ";
             else  cout << setw(5) << table[i][k] << "  ";
         }
-        cout << endl;
+        cout << '\n';
     }
-    cout << endl;
+    cout << '\n';
 }
 
 void printMinimizedExpression(vector<string> answer) {
@@ -1103,11 +1103,11 @@ void Handlinginput() {
     {
         test1 = 1;
         test2 = 1;
-        cout << "Please enter your input type" << endl;
-        cout << "1. Expression" << endl;
-        cout << "2. Minterms" << endl;
-        cout << "3. Minterms and Don't Care Terms" << endl;
-        cout << "0. Exit" << endl;
+        cout << "Please enter your input type" << '\n';
+        cout << "1. Expression" << '\n';
+        cout << "2. Minterms" << '\n';
+        cout << "3. Minterms and Don't Care Terms" << '\n';
+        cout << "0. Exit" << '\n';
         int input;
         cout << "Enter Your Choice : ";
         cin >> input;
@@ -1120,11 +1120,11 @@ void Handlinginput() {
             getline(cin, ex);
             if (!validateExpression(ex))
             {
-                cout << "This Expression Is Not Valid" << endl;
+                cout << "This Expression Is Not Valid" << '\n';
                 test2 = 0;
             }
             ex = modify(ex);
-            cout << ex << endl;
+            cout << ex << '\n';
             break;
         }
         case 2: {
@@ -1133,7 +1133,7 @@ void Handlinginput() {
             cin.ignore();
             getline(cin, min);
             if (!check(min)) {
-                cout << "Invalid Inputs..." << endl;
+                cout << "Invalid Inputs..." << '\n';
                 test2 = 0;
             }
             else
@@ -1313,7 +1313,7 @@ void Handlinginput() {
                     for (int i = 0; i < AllEPI.size(); i++)
                     {
 
-                        cout << setw(6) << fromImplicantToTerm(AllEPI[i]) << " : " << AllEPI[i] << endl;
+                        cout << setw(6) << fromImplicantToTerm(AllEPI[i]) << " : " << AllEPI[i] << '\n';
                     }
                 }
                 else if (input == 2 || input == 3)
@@ -1328,9 +1328,9 @@ void Handlinginput() {
                     for (int i = 0; i < AllEPI.size(); i++)
                     {
 
-                        cout << setw(5) << fromImplicantToTerm(AllEPI[i]) << " : " << AllEPI[i] << endl;
+                        cout << setw(5) << fromImplicantToTerm(AllEPI[i]) << " : " << AllEPI[i] << '\n';
                     }
-                    cout << endl;
+                    cout << '\n';
                 }
                 break;
             }
@@ -1344,7 +1344,7 @@ void Handlinginput() {
                     Minterms = getMinterms(table);
                     all = getPrimeImplicants(Minterms);
                     AllEPI = epi(all, allminterms);
-                    cout << endl;
+                    cout << '\n';
                     PrintCoverageChart(CoverageChart(all, allminterms));
                     cout << "\nThe minterms that are not covered by EPIs: ";
                     for (int i = 0; i < allminterms.size(); i++)
@@ -1354,7 +1354,7 @@ void Handlinginput() {
                         if (i != (int)allminterms.size() - 1) cout << ", ";
                         else cout << ")";
                     }
-                    cout << endl;
+                    cout << '\n';
                 }
                 else if (input == 2 || input == 3)
                 {
@@ -1364,7 +1364,7 @@ void Handlinginput() {
                     vector<Implicant> mins = generateMinterms(copy3);
                     all = getPrimeImplicants(mins);
                     AllEPI = epi(all, copy);
-                    cout << endl;
+                    cout << '\n';
                     PrintCoverageChart(CoverageChart(all, copy));
                     cout << "\nThe minterms that are not covered by EPIs : ";
                     for (int i = 0; i < copy.size(); i++)
@@ -1374,7 +1374,7 @@ void Handlinginput() {
                         if (i != (int)copy.size() - 1) cout << ", ";
                         else cout << ")";
                     }
-                    cout << endl;
+                    cout << '\n';
                 }
                 break;
             }
@@ -1419,7 +1419,7 @@ void Handlinginput() {
                 test1 = 0;
             }
             default: {
-                cout << "Invalid operation. Exiting program." << endl;
+                cout << "Invalid operation. Exiting program." << '\n';
                 return;
             }
             };
@@ -1595,7 +1595,7 @@ void printAllPrimeImplicants(vector<Implicant> implicants) {
             if (i != implicants[j].minterms.size() - 1)
                 cout << ",";
         }
-        cout << ")" << endl;
+        cout << ")" << '\n';
     }
 }
 
@@ -1612,7 +1612,7 @@ void printTruthTable(vector<vector<bool>> table, string Term) {
         for (int i = 0; i < (int)table[0].size() - 1; i++)
             cout << letter++ << "    ";
     }
-    cout << "F" << endl;
+    cout << "F" << '\n';
 
     for (int i = 0; i < ((int)table[0].size() - 1) * 5; i++) cout << "-";
     cout << "-\n";
@@ -1621,7 +1621,7 @@ void printTruthTable(vector<vector<bool>> table, string Term) {
         for (int j = 0; j < table[0].size(); j++) {
             cout << table[i][j] << "    ";
         }
-        cout << endl;
+        cout << '\n';
     }
 }
 
@@ -1631,8 +1631,8 @@ void printSoP(vector<string> exp) {
     for (int i = 0; i < (int)exp.size() - 1; i++) {
         cout << "(" << exp[i] << ")" << " + ";
     }
-    if (exp.size() != 0) cout << "(" << exp[exp.size() - 1] << ")" << endl;
-    else cout << '0' << endl;
+    if (exp.size() != 0) cout << "(" << exp[exp.size() - 1] << ")" << '\n';
+    else cout << '0' << '\n';
 }
 
 void printPoS(vector<string> exp) {
@@ -1641,7 +1641,7 @@ void printPoS(vector<string> exp) {
     for (int i = 0; i < (int)exp.size() - 1; i++) {
         cout << "(" << exp[i] << ")" << " * ";
     }
-    if (exp.size() != 0) cout << "(" << exp[exp.size() - 1] << ")" << endl;
+    if (exp.size() != 0) cout << "(" << exp[exp.size() - 1] << ")" << '\n';
     else cout << '1' << "\n";
 }
 
@@ -2177,9 +2177,9 @@ void PrintCoverageChart(vector<vector<string>> table) {
             if (k == 1 && i != 0) cout << setw(4) << "|" << table[i][k] << "  ";
             else  cout << setw(5) << table[i][k] << "  ";
         }
-        cout << endl;
+        cout << '\n';
     }
-    cout << endl;
+    cout << '\n';
 }
 
 vector<string> epi(vector <Implicant>& prim, vector<int>& m) {
@@ -2405,9 +2405,9 @@ void printReducedPITable(vector<vector<string>> table, string s) {
             if (k == 1 && i != 0) cout << setw(4) << "|" << table[i][k] << "   ";
             else  cout << setw(5) << table[i][k] << "  ";
         }
-        cout << endl;
+        cout << '\n';
     }
-    cout << endl;
+    cout << '\n';
 }
 
 void printMinimizedExpression(vector<string> answer){
@@ -2501,11 +2501,11 @@ void Handlinginput() {
     {
         test1 = 1;
         test2 = 1;
-        cout << "Please enter your input type" << endl;
-        cout << "1. Expression" << endl;
-        cout << "2. Minterms" << endl;
-        cout << "3. Minterms and Don't Care Terms" << endl;
-        cout << "0. Exit" << endl;
+        cout << "Please enter your input type" << '\n';
+        cout << "1. Expression" << '\n';
+        cout << "2. Minterms" << '\n';
+        cout << "3. Minterms and Don't Care Terms" << '\n';
+        cout << "0. Exit" << '\n';
         int input;
         cout << "Enter Your Choice : ";
         cin >> input;
@@ -2518,11 +2518,11 @@ void Handlinginput() {
                 getline(cin, ex);
                 if (!validateExpression(ex))
                 {
-                    cout << "This Expression Is Not Valid" << endl;
+                    cout << "This Expression Is Not Valid" << '\n';
                     test2 = 0;
                 }
                 ex = modify(ex);
-                cout << ex << endl;
+                cout << ex << '\n';
                 break;
             }
             case 2:{
@@ -2533,7 +2533,7 @@ void Handlinginput() {
                 if(!check(min)){
                     test2 = 0;
                     input = 2;
-                    ciut << "sss" << endl;
+                    ciut << "sss" << '\n';
                 }
                 minterms = stringToInt(min);
                 break;
@@ -2709,7 +2709,7 @@ void Handlinginput() {
                         for (int i = 0; i < AllEPI.size(); i++)
                         {
                             
-                            cout << setw(6) << fromImplicantToTerm(AllEPI[i]) << " : " << AllEPI[i] << endl;
+                            cout << setw(6) << fromImplicantToTerm(AllEPI[i]) << " : " << AllEPI[i] << '\n';
                         }
                     }
                     else if (input == 2 || input == 3)
@@ -2724,9 +2724,9 @@ void Handlinginput() {
                         for (int i = 0; i < AllEPI.size(); i++)
                         {
                             
-                            cout << setw(5) << fromImplicantToTerm(AllEPI[i]) << " : " << AllEPI[i] << endl;
+                            cout << setw(5) << fromImplicantToTerm(AllEPI[i]) << " : " << AllEPI[i] << '\n';
                         }
-                        cout << endl;
+                        cout << '\n';
                     }
                     break;
                 }
@@ -2740,7 +2740,7 @@ void Handlinginput() {
                         Minterms = getMinterms(table);
                         all = getPrimeImplicants(Minterms);
                         AllEPI = epi(all, allminterms);
-                        cout << endl;
+                        cout << '\n';
                         PrintCoverageChart(CoverageChart(all, allminterms));
                         cout << "\nThe minterms that are not covered by EPIs: ";
                         for (int i = 0; i < allminterms.size(); i++)
@@ -2750,7 +2750,7 @@ void Handlinginput() {
                             if (i != (int)allminterms.size() - 1) cout << ", ";
                             else cout << ")";
                         }
-                        cout << endl;
+                        cout << '\n';
                     }
                     else if (input == 2 || input == 3)
                     {
@@ -2760,7 +2760,7 @@ void Handlinginput() {
                         vector<Implicant> mins = generateMinterms(copy3);
                         all = getPrimeImplicants(mins);
                         AllEPI = epi(all, copy);
-                        cout << endl;
+                        cout << '\n';
                         PrintCoverageChart(CoverageChart(all, copy));
                         cout << "\nThe minterms that are not covered by EPIs : ";
                         for (int i = 0; i < copy.size(); i++)
@@ -2770,7 +2770,7 @@ void Handlinginput() {
                             if (i != (int)copy.size() - 1) cout << ", ";
                             else cout << ")";
                         }
-                        cout << endl;
+                        cout << '\n';
                     }
                     break;
                 }
@@ -2815,7 +2815,7 @@ void Handlinginput() {
                     test1 = 0;
                 }
                 default: {
-                    cout << "Invalid operation. Exiting program." << endl;
+                    cout << "Invalid operation. Exiting program." << '\n';
                     return;
                 }
             };
