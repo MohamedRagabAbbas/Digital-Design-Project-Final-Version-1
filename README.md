@@ -5,8 +5,8 @@ This repo includes the design and implementation of the Quine-McCluskey minimiza
 
 ## Running the program
 To run the program, the user can input his boolean expression is any of the following formats:
-### Input formats 
-<br> **1**. Expression in SoP form <br> **2**. A list of minterms <br> **3**. A list of minterms and don't cares <br> 
-### Evaluation Conventions
-<br> For the first format, to multiply two or more variables, they should be adjacent without any charcters in between. To add two ore more variables, separate them by a '+' sign. <br> For the second and third formats, the minterms/don't cares must be separated by a space.
+#### Input formats 
+**1**. Expression in SoP form <br> **2**. A list of minterms <br> **3**. A list of minterms and don't cares <br> 
+#### Evaluation Conventions
+For the first format, to multiply two or more variables, they should be adjacent without any charcters in between. To add two ore more variables, separate them by a '+' sign. <br> For the second and third formats, the minterms/don't cares must be separated by a space.
 
