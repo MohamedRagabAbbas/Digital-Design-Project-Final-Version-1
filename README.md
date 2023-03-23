@@ -1,4 +1,4 @@
-# Digital-Design-Project-Final-Version-1
+# Quine McCluskey Logic Minimization Project
 
  
 CSCE 2301, 02 Project I Report Spring 2023
