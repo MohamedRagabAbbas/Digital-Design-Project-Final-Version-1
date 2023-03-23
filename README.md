@@ -1,7 +1,7 @@
 # Quine-McCluskey Logic Minimization Project
 
 ## Overview 
-This repo includes the design and implementation for the Quine-McCluskey minimization algorithm. The project allows the user to enter a boolean expression in any of the following forms. &nbsp
+This repo includes the design and implementation for the Quine-McCluskey minimization algorithm. The project allows the user to enter a boolean expression in any of the following forms. &nbsp;
 1- Expression in SoP form
 2- A list of minterms
 3- A list of minterms and don't cares
