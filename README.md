@@ -1,6 +1,6 @@
 # Quine McCluskey Logic Minimization Project
 
- 
+## Overview 
 CSCE 2301, 02 Project I Report Spring 2023
 
 Quine-McCluskey Logic Minimization
