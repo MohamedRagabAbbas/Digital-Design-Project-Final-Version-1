@@ -8,8 +8,8 @@ To run the program, the user can input his boolean expression is any of the foll
 #### Input formats 
 **1**. Expression in SoP form <br> **2**. A list of minterms <br> **3**. A list of minterms and don't cares <br> 
 #### Evaluation Conventions
--To **'AND'** two or more variables, they should be adjacent without any charcters in between.
--To **'OR'** two or more variables, they should be separated by a '+' sign.
--When inputting minterms or don't cares, they should be separated by a single space.
+- To **'AND'** two or more variables, they should be adjacent without any charcters in between.
+- To **'OR'** two or more variables, they should be separated by a '+' sign.
+- When inputting minterms or don't cares, they should be separated by a single space.
 
 
